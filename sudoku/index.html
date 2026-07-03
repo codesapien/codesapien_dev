@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Get Sudoku AI — Coach &amp; Learn</title>
+  <meta name="description" content="Download Sudoku AI — Coach & Learn on the App Store or Google Play. A modern Sudoku app with a real coach." />
+  <meta property="og:title" content="Sudoku AI — Coach &amp; Learn" />
+  <meta property="og:description" content="A modern Sudoku app with a real coach. Get it on the App Store or Google Play." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://codesapien.dev/sudoku/" />
+  <meta property="og:image" content="https://codesapien.dev/sudoku/icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="icon.png" />
+
+  <style>
+    :root {
+      --bg-1: #0a1428;
+      --bg-2: #1a2444;
+      --ink-1: #f4f6fb;
+      --ink-2: #b9c2d6;
+      --ink-3: #6f7c97;
+      --accent: #d4af37;
+      --rule: rgba(244, 246, 251, 0.08);
+      --radius: 12px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
+      background-attachment: fixed;
+      color: var(--ink-1);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    main {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 48px 24px;
+    }
+
+    .app-icon {
+      width: 112px;
+      height: 112px;
+      border-radius: 26px;
+      box-shadow:
+        0 0 0 1px var(--rule),
+        0 12px 40px rgba(0, 0, 0, 0.45),
+        0 0 60px rgba(212, 175, 55, 0.12);
+      margin-bottom: 28px;
+    }
+
+    h1 {
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.8px;
+      margin: 0 0 10px;
+    }
+
+    .lede {
+      font-size: 17px;
+      color: var(--ink-2);
+      margin: 0 0 36px;
+      max-width: 440px;
+    }
+
+    .status {
+      font-size: 14px;
+      color: var(--ink-3);
+      margin: 0 0 20px;
+      min-height: 22px;
+      transition: opacity 0.3s;
+    }
+
+    .stores {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .stores.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    .store-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 22px 12px 16px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+      color: var(--ink-1);
+      text-decoration: none;
+      text-align: left;
+      transition: border-color 0.15s, background 0.15s, transform 0.15s;
+    }
+
+    .store-btn:hover {
+      background: rgba(255, 255, 255, 0.07);
+      border-color: rgba(212, 175, 55, 0.45);
+      transform: translateY(-1px);
+    }
+
+    .store-btn svg {
+      width: 26px;
+      height: 26px;
+      flex-shrink: 0;
+      fill: var(--accent);
+    }
+
+    .store-btn .kicker {
+      display: block;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      line-height: 1.3;
+    }
+
+    .store-btn .store-name {
+      display: block;
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+      line-height: 1.3;
+    }
+
+    .back {
+      margin-top: 56px;
+      font-size: 13px;
+    }
+
+    .back a {
+      color: var(--ink-3);
+      text-decoration: none;
+      border-bottom: 1px solid var(--rule);
+      transition: color 0.15s, border-color 0.15s;
+    }
+
+    .back a:hover {
+      color: var(--accent);
+      border-bottom-color: rgba(212, 175, 55, 0.5);
+    }
+
+    @media (max-width: 480px) {
+      h1 { font-size: 26px; }
+      .lede { font-size: 15px; }
+      .stores { flex-direction: column; width: 100%; max-width: 320px; }
+      .store-btn { justify-content: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <img class="app-icon" src="icon.png" alt="Sudoku AI app icon" width="112" height="112" />
+    <h1>Sudoku AI — Coach &amp; Learn</h1>
+    <p class="lede">A modern Sudoku app with a real coach. Place a wrong digit and it explains <em>why</em>, in the language of the technique you almost used.</p>
+
+    <p class="status" id="status" aria-live="polite"></p>
+
+    <div class="stores" id="stores">
+      <a class="store-btn" href="https://apps.apple.com/us/app/sudoku-ai-coach-learn/id6778964007">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+        <span><span class="kicker">Download on the</span><span class="store-name">App Store</span></span>
+      </a>
+      <a class="store-btn" href="https://play.google.com/store/apps/details?id=dev.codesapien.sudokuai">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.61 1.81c-.36.19-.61.57-.61 1.06v18.26c0 .49.25.87.61 1.06l10.4-10.19L3.61 1.81zm11.5 9.11l2.7-2.65-11.4-6.44 8.7 9.09zm3.68-1.69l-2.79 2.74 2.79 2.74 2.66-1.5c.79-.45.79-2.03 0-2.48l-2.66-1.5zm-3.68 3.79l-8.7 9.09 11.4-6.44-2.7-2.65z"/></svg>
+        <span><span class="kicker">Get it on</span><span class="store-name">Google Play</span></span>
+      </a>
+    </div>
+
+    <p class="back"><a href="/">codesapien.dev</a></p>
+  </main>
+
+  <script>
+    (function () {
+      var APP_STORE = 'https://apps.apple.com/us/app/sudoku-ai-coach-learn/id6778964007';
+      var PLAY_STORE = 'https://play.google.com/store/apps/details?id=dev.codesapien.sudokuai';
+
+      var ua = navigator.userAgent;
+      var isAndroid = /Android/i.test(ua);
+      // iPadOS 13+ reports as "MacIntel" but supports touch.
+      var isIOS = /iPhone|iPad|iPod/i.test(ua) ||
+        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+      var status = document.getElementById('status');
+      var stores = document.getElementById('stores');
+      var target = isAndroid ? PLAY_STORE : (isIOS ? APP_STORE : null);
+
+      function showLinks(message) {
+        status.textContent = message || '';
+        stores.classList.add('visible');
+      }
+
+      if (target) {
+        status.textContent = isAndroid
+          ? 'Taking you to Google Play…'
+          : 'Taking you to the App Store…';
+        // Reveal the buttons shortly after the redirect fires, so anyone
+        // still on this page (blocked redirect, back-navigation) has a way in.
+        setTimeout(function () {
+          showLinks('Not redirected? Use a link below.');
+        }, 1800);
+        setTimeout(function () {
+          window.location.href = target;
+        }, 350);
+      } else {
+        showLinks();
+      }
+    })();
+  </script>
+</body>
+</html>
